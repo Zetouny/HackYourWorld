@@ -3,6 +3,8 @@
 * {
   margin: 0;
   padding: 0;
+  color: #fff;
+  text-decoration: none;
   box-sizing: content-box;
 }
 
@@ -18,14 +20,58 @@ body {
   width: 100dvw;
   font-family: 'Chakra Petch', sans-serif;
   font-weight: 400;
-  font-size: 1rem;
+  font-size: 2rem;
   font-style: normal;
   color: #fff;
   background-color: #111;
 }
 
+main {
+  width: 80dvw;
+}
+
+p {
+  max-width: 1000px;
+}
+
 h1.page-title {
+  color: #4b7eb3;
   font-size: 5rem;
+  font-weight: 700;
+}
+
+strong {
+  color: #4b7eb3;
+  font-weight: 700;
+}
+
+#home-page {
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 2.5dvh;
+  text-align: center;
+}
+
+.button-container {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 2dvw;
+}
+
+a[role='button'] {
+  color: #fff;
+  padding: 1rem 4rem;
+  border: 3px solid #4b7eb3;
+  border-radius: 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+a[role='button']:hover {
+  background-color: #4b7eb3;
+  color: #111;
 }
 
 #globe-container {
@@ -34,15 +80,15 @@ h1.page-title {
   position: absolute;
   top: 0;
   left: 0;
+  z-index: -1;
   overflow: hidden;
 }
 
 #globe {
   width: 100dvw;
   height: 100dvw;
-  opacity: 0.2;
+  opacity: 0.1;
   position: absolute;
   top: calc(50% - 50dvw);
   left: calc(50% - 50dvw);
-  z-index: -1;
 }
