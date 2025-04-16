@@ -47,11 +47,17 @@ strong {
 
 #home-page {
   display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.content-container {
+  display: flex;
   flex-flow: column wrap;
   justify-content: center;
-  align-items: center;
-  gap: 2.5dvh;
-  text-align: center;
+  gap: 2dvh;
+  width: 50%;
 }
 
 .button-container {
@@ -74,21 +80,16 @@ a[role='button']:hover {
   color: #111;
 }
 
-#globe-container {
-  height: 100dvh;
-  width: 100dvw;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: -1;
-  overflow: hidden;
-}
+/* #globe-container {
+  width: 500px;
+  height: 500px;
+} */
 
 #globe {
-  width: 100dvw;
-  height: 100dvw;
-  opacity: 0.1;
-  position: absolute;
-  top: calc(50% - 50dvw);
-  left: calc(50% - 50dvw);
+  width: 500px;
+  height: 500px;
+  top: 0;
+  left: 0;
+  opacity: 1;
+  position: relative;
 }

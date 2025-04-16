@@ -1,4 +1,4 @@
-import { initHomePage } from './functions/homePage.js';
+import { initHomePage } from './pages/homePage.js';
 
 function main() {
   initHomePage();
