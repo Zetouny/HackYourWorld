@@ -1,4 +1,5 @@
 import { initCountriesPage } from './pages/countriesPage.js';
+import { initCountryPage } from './pages/countryPage.js';
 import { initHomePage } from './pages/homePage.js';
 
 function main() {
@@ -10,6 +11,7 @@ function main() {
     if (getURLCountry == 'All') {
       initCountriesPage();
     } else {
+      initCountryPage(getURLCountry);
     }
   } else {
     initHomePage();
