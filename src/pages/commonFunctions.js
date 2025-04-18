@@ -15,28 +15,14 @@ export async function getUserLocation() {
 }
 
 export async function getCountry(request, country) {
-  let response, param;
-  const fetchConfig = country
-    ? {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ iso2: country }),
-        redirect: 'follow',
-      }
-    : null;
+  const url = 'https://restcountries.com/v3.1';
 
-  if (request === 'flag') {
-    param = 'flag/images';
-  } else if (request === 'positions') {
-    param = 'positions';
+  let response;
+  if (!country) {
+    response = await fetch(`${url}/all?fields=${request}`);
+  } else {
+    response = await fetch(`${url}/alpha/${country}?fields=${request}`);
   }
-
-  response = await fetch(
-    `https://countriesnow.space/api/v0.1/countries/${param}`,
-    fetchConfig
-  );
 
   if (!response.ok) {
     throw new Error(response);
@@ -45,4 +31,33 @@ export async function getCountry(request, country) {
   return response.json();
 }
 
-export function displayError(error) {}
+// export async function getCountry(request, country) {
+//   let response, param;
+//   const fetchConfig = country
+//     ? {
+//         method: 'POST',
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify({ iso2: country }),
+//         redirect: 'follow',
+//       }
+//     : null;
+
+//   if (request === 'flag') {
+//     param = 'flag/images';
+//   } else if (request === 'positions') {
+//     param = 'positions';
+//   }
+
+//   response = await fetch(
+//     `https://countriesnow.space/api/v0.1/countries/${param}`,
+//     fetchConfig
+//   );
+
+//   if (!response.ok) {
+//     throw new Error(response);
+//   }
+
+//   return response.json();
+// }

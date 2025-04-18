@@ -1,6 +1,7 @@
 import { createCountriesPage } from '../components/countriesPage.js';
 import { createWorldMapGlobe } from './globe.js';
-import { getCountry } from './commonFunctions.js';
+import { initCountryPage } from './countryPage.js';
+import { setUrl, getCountry } from './commonFunctions.js';
 
 let GLOBE_CONTROLLER;
 export const initCountriesPage = async () => {
@@ -13,11 +14,10 @@ export const initCountriesPage = async () => {
   GLOBE_CONTROLLER = createWorldMapGlobe();
 
   let countriesData;
-  let countriesPosition;
   try {
-    countriesData = await getCountry('flag');
-    countriesPosition = await getCountry('positions');
-    createCountriesList(countriesData, countriesPosition);
+    countriesData = await getCountry('name,flags,latlng,cca2');
+    countriesData.sort((a, b) => a.name.common.localeCompare(b.name.common));
+    createCountriesList(countriesData);
   } catch (error) {
     console.log(error.message);
   }
@@ -28,22 +28,21 @@ export const initCountriesPage = async () => {
     const searchValue = searchBox.value;
     clearTimeout(searchTimeOut);
     searchTimeOut = setTimeout(() => {
-      createCountriesList(countriesData, countriesPosition, searchValue);
+      createCountriesList(countriesData, searchValue);
     }, 500);
   });
 };
 
-async function createCountriesList(data, positions, searchKeyword = '') {
+async function createCountriesList(countriesData, searchKeyword = '') {
   const ul = document.querySelector('#countries-list');
   ul.innerHTML = '';
 
-  const countriesData = data.data;
-  const countriesPosition = positions.data;
-
   countriesData.forEach((data) => {
-    const countryName = data.name;
-    const countryFlag = data.flag;
-    let countryIso2 = data.iso2;
+    const countryName = data.name.common;
+    const countryFlag = data.flags.svg;
+    const countryLatLng = data.latlng;
+    const countryCCA2 = data.cca2;
+
     const search = countryName
       .toLowerCase()
       .includes(searchKeyword.toLowerCase());
@@ -51,20 +50,19 @@ async function createCountriesList(data, positions, searchKeyword = '') {
     if (search || searchKeyword === '') {
       const li = document.createElement('li');
       li.innerHTML = `<span>${countryName}</span>`;
-      li.dataset.iso2 = countryIso2;
 
-      const position = countriesPosition.filter((country) => {
-        if (countryIso2 === 'GR') countryIso2 = 'EL'; // This line to fix a bug in the API for Greece ISO2 Code
-        if (country.iso2 === countryIso2) return country;
-      });
-
-      li.dataset.lat = position[0].lat;
-      li.dataset.long = position[0].long;
+      li.dataset.cca2 = countryCCA2;
+      li.dataset.lat = countryLatLng[0];
+      li.dataset.long = countryLatLng[1];
 
       const flagContainer = document.createElement('div');
       flagContainer.classList.add('country-flag');
       const flag = document.createElement('img');
-      flag.src = countryFlag;
+
+      countryName === 'Syria'
+        ? (flag.src =
+            'https://upload.wikimedia.org/wikipedia/commons//5/54/Flag_of_Syria_%282025-%29.svg')
+        : (flag.src = countryFlag);
 
       flagContainer.appendChild(flag);
       li.prepend(flagContainer);
@@ -82,6 +80,11 @@ async function createCountriesList(data, positions, searchKeyword = '') {
     country.addEventListener('mouseout', () => {
       GLOBE_CONTROLLER.updateFocus();
       GLOBE_CONTROLLER.updateMarker();
+    });
+
+    country.addEventListener('click', () => {
+      setUrl(country.dataset.cca2);
+      initCountryPage();
     });
   });
 }

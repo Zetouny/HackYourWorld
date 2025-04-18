@@ -1,6 +1,7 @@
 import { createHomePage } from '../components/homePage.js';
 import { initCountriesPage } from './countriesPage.js';
 import { createWorldMapGlobe } from './globe.js';
+import { initCountryPage } from './countryPage.js';
 import { setUrl, getUserLocation, getCountry } from './commonFunctions.js';
 
 let GLOBE_CONTROLLER, GLOBE_INTERVAL;
@@ -20,7 +21,10 @@ export const initHomePage = () => {
 async function getStarted() {
   try {
     const ipToLocation = await getUserLocation();
-    const getUserCountry = await getCountry('positions', ipToLocation.country);
+    const getUserCountry = await getCountry(
+      'name,latlng',
+      ipToLocation.country
+    );
 
     randomLocations();
 
@@ -59,7 +63,7 @@ async function getStarted() {
 
     await animateText(
       hacking,
-      `<h2 class="colored">Gotcha! You’re in ${getUserCountry.data.name}!</h2>
+      `<h2 class="colored">Gotcha! You’re in ${getUserCountry.name.common}!</h2>
     But don’t worry, we’re friendly hackers. Click below to uncover everything about your country, or explore the secrets of the world!`,
       'in',
       3000
@@ -73,11 +77,12 @@ async function getStarted() {
       0
     );
 
-    randomLocations(getUserCountry.data.lat, getUserCountry.data.long);
+    randomLocations(getUserCountry.latlng);
 
     const hackMyLocation = document.querySelector('#hack-my-location');
     hackMyLocation.addEventListener('click', async () => {
       setUrl(ipToLocation.country);
+      initCountryPage();
     });
 
     const hackTheWorld = document.querySelector('#hack-the-world');
@@ -102,11 +107,11 @@ function animateText(element, text, animationType, duration) {
   });
 }
 
-function randomLocations(lat, long) {
-  if (lat && long) {
+function randomLocations(latlng) {
+  if (latlng) {
     clearInterval(GLOBE_INTERVAL);
-    GLOBE_CONTROLLER.updateFocus(lat, long);
-    GLOBE_CONTROLLER.updateMarker(lat, long);
+    GLOBE_CONTROLLER.updateFocus(latlng[0], latlng[1]);
+    GLOBE_CONTROLLER.updateMarker(latlng[0], latlng[1]);
   } else {
     GLOBE_INTERVAL = setInterval(() => {
       const randomLat = Math.random() * 180 - 90;
