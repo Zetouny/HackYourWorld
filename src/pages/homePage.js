@@ -1,63 +1,118 @@
 import { createHomePage } from '../components/homePage.js';
-import createGlobe from 'https://cdn.skypack.dev/cobe';
+import { initCountriesPage } from './countriesPage.js';
+import { createWorldMapGlobe } from './globe.js';
+import { setUrl, getUserLocation, getCountry } from './commonFunctions.js';
 
+let GLOBE_CONTROLLER, GLOBE_INTERVAL;
 export const initHomePage = () => {
   const root = document.querySelector('main');
+  root.innerHTML = '';
+
   const homePage = createHomePage();
   root.appendChild(homePage);
 
-  createWorldMapGlobe();
+  GLOBE_CONTROLLER = createWorldMapGlobe();
 
-  const hackMyLocation = document.querySelector('#hack-my-location');
-  hackMyLocation.addEventListener('click', async () => {
-    try {
-      const userLocation = await getUserLocation();
-      console.log(userLocation.country);
-    } catch (error) {
-      console.log('Error:', error.message);
-    }
-  });
+  const getStartedBtn = document.querySelector('#get-started');
+  getStartedBtn.addEventListener('click', getStarted);
 };
 
-function createWorldMapGlobe() {
-  const canvas = document.querySelector('#globe');
-  let phi = 0;
+async function getStarted() {
+  try {
+    const ipToLocation = await getUserLocation();
+    const getUserCountry = await getCountry('positions', ipToLocation.country);
 
-  const globe = createGlobe(canvas, {
-    devicePixelRatio: 2,
-    width: 1000,
-    height: 1000,
-    phi: 0,
-    theta: 0,
-    dark: 1,
-    diffuse: 1.2,
-    scale: 1,
-    mapSamples: 16000,
-    mapBrightness: 1,
-    mapBaseBrightness: 0,
-    baseColor: [0.5, 0.5, 0.5],
-    markerColor: [0, 42, 63],
-    glowColor: [0, 0, 0],
-    opacity: 1,
-    offset: [0, 0],
-    markers: [{ location: [37.7595, -122.4367], size: 0.1 }],
-    onRender: (state) => {
-      // Called on every animation frame.
-      // `state` will be an empty object, return updated params.
-      state.phi = phi;
-      phi += 0.001;
-      state.width = 1000;
-      state.height = 1000;
-    },
+    randomLocations();
+
+    const buttonsContainer = document.querySelector('.buttons-container');
+    buttonsContainer.querySelector('#get-started').classList.add('animate-out');
+
+    const hacking = document.createElement('p');
+
+    await animateText(
+      hacking,
+      '<h2 class="colored">Hacking into your location...</h2>',
+      'in-out',
+      1500
+    );
+    buttonsContainer.before(hacking);
+    await animateText(
+      hacking,
+      '<h2 class="colored">Deploying satellites...</h2>',
+      'in-out',
+      3000
+    );
+
+    await animateText(
+      hacking,
+      '<h2 class="colored">Cracking firewalls...</h2>',
+      'in-out',
+      3000
+    );
+
+    await animateText(
+      hacking,
+      '<h2 class="colored">Just kidding!</h2>',
+      'in-out',
+      3000
+    );
+
+    await animateText(
+      hacking,
+      `<h2 class="colored">Gotcha! You’re in ${getUserCountry.data.name}!</h2>
+    But don’t worry, we’re friendly hackers. Click below to uncover everything about your country, or explore the secrets of the world!`,
+      'in',
+      3000
+    );
+
+    buttonsContainer.innerHTML = '';
+    await animateText(
+      buttonsContainer,
+      '<button id="hack-my-location">Hack My Location!</button><button id="hack-the-world">Hack The World!</button>',
+      'in',
+      0
+    );
+
+    randomLocations(getUserCountry.data.lat, getUserCountry.data.long);
+
+    const hackMyLocation = document.querySelector('#hack-my-location');
+    hackMyLocation.addEventListener('click', async () => {
+      setUrl(ipToLocation.country);
+    });
+
+    const hackTheWorld = document.querySelector('#hack-the-world');
+    hackTheWorld.addEventListener('click', () => {
+      setUrl();
+      initCountriesPage();
+    });
+  } catch (error) {
+    console.log('Error:', error.message);
+  }
+}
+
+function animateText(element, text, animationType, duration) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      element.classList.remove('animate-in-out');
+      element.innerHTML = text;
+      void element.offsetWidth;
+      element.classList.add(`animate-${animationType}`);
+      resolve();
+    }, duration);
   });
 }
 
-async function getUserLocation() {
-  const response = await fetch('https://api.country.is/');
-
-  if (!response.ok) {
-    throw new Error(response);
+function randomLocations(lat, long) {
+  if (lat && long) {
+    clearInterval(GLOBE_INTERVAL);
+    GLOBE_CONTROLLER.updateFocus(lat, long);
+    GLOBE_CONTROLLER.updateMarker(lat, long);
+  } else {
+    GLOBE_INTERVAL = setInterval(() => {
+      const randomLat = Math.random() * 180 - 90;
+      const randomLong = Math.random() * 360 - 180;
+      GLOBE_CONTROLLER.updateFocus(randomLat, randomLong);
+      GLOBE_CONTROLLER.updateMarker(randomLat, randomLong);
+    }, 1000);
   }
-
-  return response.json();
 }

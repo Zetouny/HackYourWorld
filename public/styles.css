@@ -23,7 +23,7 @@ body {
   font-size: 2rem;
   font-style: normal;
   color: #fff;
-  background-color: #111;
+  background-color: #0d0d0d;
 }
 
 main {
@@ -35,17 +35,20 @@ p {
 }
 
 h1.page-title {
-  color: #4b7eb3;
+  color: #1e90ff;
   font-size: 5rem;
   font-weight: 700;
 }
 
-strong {
-  color: #4b7eb3;
+strong,
+h2.colored {
+  color: #1e90ff;
   font-weight: 700;
 }
 
-#home-page {
+/* =-=-=-=-= Home Page =-=-=-=-= */
+#home-page,
+#countries-page {
   display: flex;
   flex-flow: row nowrap;
   justify-content: center;
@@ -60,36 +63,111 @@ strong {
   width: 50%;
 }
 
-.button-container {
+.buttons-container {
   display: flex;
   flex-flow: row nowrap;
   gap: 2dvw;
 }
 
-a[role='button'] {
+button {
   color: #fff;
-  padding: 1rem 4rem;
-  border: 3px solid #4b7eb3;
+  padding: 1.5rem 4rem;
+  border: 3px solid #1e90ff;
   border-radius: 1rem;
+  background-color: transparent;
+  font-size: 2rem;
   font-weight: 600;
+  cursor: pointer;
   transition: all 0.3s ease;
 }
 
-a[role='button']:hover {
-  background-color: #4b7eb3;
-  color: #111;
+button:hover {
+  background-color: #1e90ff;
+  color: #0d0d0d;
 }
 
-/* #globe-container {
-  width: 500px;
-  height: 500px;
-} */
+#globe-container {
+  width: 50%;
+  overflow: hidden;
+}
 
-#globe {
-  width: 500px;
-  height: 500px;
-  top: 0;
-  left: 0;
-  opacity: 1;
-  position: relative;
+.animate-in {
+  animation: fade-in 1.5s ease-in forwards;
+}
+
+.animate-out {
+  animation: fade-out 1.5s ease-in forwards;
+}
+
+.animate-in-out {
+  animation:
+    fade-in 1.5s ease-in,
+    fade-out 1.5s ease-out 1.5s forwards;
+}
+
+@keyframes fade-in {
+  0% {
+    /* Effect values */
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+}
+
+@keyframes fade-out {
+  100% {
+    /* Effect values */
+    opacity: 0;
+    transform: translateY(30px);
+  }
+}
+/* =-=-=-=-= Countries Page =-=-=-=-= */
+
+#search-box {
+  padding: 1.5rem;
+  color: #000;
+  font-size: 1.5rem;
+  border-radius: 0.5rem;
+  border: 2px solid #121212;
+  outline: none;
+  transition: border 0.3s ease;
+}
+
+#search-box:focus {
+  border: 2px solid #1e90ff;
+}
+
+#countries-list {
+  width: 100%;
+  height: 50dvh;
+  max-height: 50dvh;
+  overflow-y: auto;
+  scrollbar-color: #1e90ff #121212;
+}
+
+#countries-list li {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid #121212;
+  gap: 0.5dvw;
+  list-style: none;
+  cursor: pointer;
+}
+
+#countries-list li:hover {
+  background-color: #121212;
+}
+
+#countries-list div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 2dvw;
+  height: 1.5dvw;
+}
+
+#countries-list div img {
+  width: 100%;
+  max-height: 100%;
 }
