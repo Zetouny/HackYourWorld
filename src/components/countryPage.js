@@ -1,20 +1,17 @@
 export const createCountryPage = () => {
   const main = document.createElement('div');
   main.id = 'country-page';
+  main.classList = 'page-content';
 
   main.innerHTML = String.raw`
     <div class="content-container">
-      <h1 class="page-title">HackYourWorld</h1>
-      
-      <p>Explore and choose your country from the list provided below. To make finding your country faster and easier, you can use the search box to type the name of your country and quickly locate it.</p>
-      
-      <input id="search-box" type="text" placeholder="Search for a country" autocomplete="off">
-      <ul id="countries-list"></ul>
-    </div>
+      <h1 class="page-title"></h1>
+      <p class="page-intro"></p>
 
-    <div id="globe-container">
-      <canvas id="globe" width="500" height="500"></canvas>
+      <div class="country-info"></div>
     </div>
   `;
   return main;
 };
+
+// <div id="globe-container"></div>

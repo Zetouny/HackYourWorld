@@ -118,6 +118,6 @@ function randomLocations(latlng) {
       const randomLong = Math.random() * 360 - 180;
       GLOBE_CONTROLLER.updateFocus(randomLat, randomLong);
       GLOBE_CONTROLLER.updateMarker(randomLat, randomLong);
-    }, 1000);
+    }, 750);
   }
 }

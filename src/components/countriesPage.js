@@ -1,6 +1,7 @@
 export const createCountriesPage = () => {
   const main = document.createElement('div');
   main.id = 'countries-page';
+  main.classList = 'page-content';
 
   main.innerHTML = String.raw`
     <div class="content-container">

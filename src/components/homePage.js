@@ -1,6 +1,7 @@
 export const createHomePage = () => {
   const main = document.createElement('div');
   main.id = 'home-page';
+  main.classList = 'page-content';
 
   main.innerHTML = String.raw`
     <div class="content-container">
