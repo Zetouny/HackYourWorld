@@ -7,7 +7,6 @@ export const createCountryPage = () => {
     <div class="content-container">
       <h1 class="page-title"></h1>
       <p class="page-intro"></p>
-
       <div class="country-info"></div>
     </div>
   `;

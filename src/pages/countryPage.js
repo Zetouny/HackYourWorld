@@ -23,6 +23,20 @@ export const initCountryPage = async () => {
       'https://upload.wikimedia.org/wikipedia/commons//5/54/Flag_of_Syria_%282025-%29.svg';
   }
 
+  const mapContainer = document.createElement('div');
+  mapContainer.id = 'country-map';
+  root.prepend(mapContainer);
+
+  const countryMap = L.map('country-map').setView(countryData[0].latlng, 5);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution:
+      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    subdomains: 'abcd',
+    maxZoom: 20,
+  }).addTo(countryMap);
+
+  fetchCountryGeoJSON(countryName, countryData[0].cca2, countryMap);
+
   const pageTitle = document.querySelector('.page-title');
   const pageIntro = document.querySelector('.page-intro');
   const countryInfo = document.querySelector('.country-info');
@@ -125,7 +139,6 @@ export const initCountryPage = async () => {
     'FI.RES.TOTL.CD'
   );
 
-  console.log(totalReserves);
   financialInfo.innerHTML = String.raw`
     <legend>💵 Financial</legend>
     <div class="info-grid">
@@ -212,6 +225,32 @@ async function getRecentPopulationInfo(country, param) {
     }
 
     return await response.json();
+  } catch (error) {
+    displayError(`<strong>An error occurred:</strong>${error}`);
+  }
+}
+
+async function fetchCountryGeoJSON(country, cca2, countryMap) {
+  try {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/search?country=${country}&countrycodes=${cca2}&format=geojson&polygon_geojson=1`
+    );
+
+    if (!response.ok) {
+      throw new Error(response.status);
+    }
+
+    const data = await response.json();
+    const geoJsonLayer = L.geoJson(data, {
+      style: {
+        fillColor: 'transparent',
+        color: '#1e90ff',
+        weight: 2,
+        fillOpacity: 1,
+      },
+    }).addTo(countryMap);
+
+    countryMap.fitBounds(geoJsonLayer.getBounds());
   } catch (error) {
     displayError(`<strong>An error occurred:</strong>${error}`);
   }
