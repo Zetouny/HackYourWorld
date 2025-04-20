@@ -5,59 +5,66 @@ export function setUrl(country = 'All') {
 }
 
 export async function getUserLocation() {
-  const response = await fetch('https://api.country.is/');
+  try {
+    const response = await fetch('https://api.country.is/');
 
-  if (!response.ok) {
-    throw new Error(response);
+    if (!response.ok) {
+      throw new Error(response.status);
+    }
+
+    return response.json();
+  } catch (error) {
+    displayError(`<strong>An error occurred:</strong>${error}`);
   }
-
-  return response.json();
 }
 
 export async function getCountry(request, country) {
-  const url = 'https://restcountries.com/v3.1';
+  try {
+    const url = 'https://restcountries.com/v3.1';
 
-  let response;
-  if (!country) {
-    response = await fetch(`${url}/all?fields=${request}`);
-  } else {
-    response = await fetch(`${url}/alpha/${country}?fields=${request}`);
+    let response;
+    if (!country) {
+      response = await fetch(`${url}/all?fields=${request}`);
+    } else {
+      response = await fetch(`${url}/alpha/${country}?fields=${request}`);
+    }
+
+    if (!response.ok) {
+      throw new Error(response.status);
+    }
+
+    return response.json();
+  } catch (error) {
+    displayError(`<strong>An error occurred:</strong>${error}`);
   }
-
-  if (!response.ok) {
-    throw new Error(response);
-  }
-
-  return response.json();
 }
 
-// export async function getCountry(request, country) {
-//   let response, param;
-//   const fetchConfig = country
-//     ? {
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({ iso2: country }),
-//         redirect: 'follow',
-//       }
-//     : null;
+export function loadingStart() {
+  const appStatus = document.querySelector('#app-status');
+  appStatus.innerHTML = '<div>Loading...</div><div class="loader"></div>';
+  appStatus.classList = 'loading';
+}
 
-//   if (request === 'flag') {
-//     param = 'flag/images';
-//   } else if (request === 'positions') {
-//     param = 'positions';
-//   }
+export function loadingEnd() {
+  const appStatus = document.querySelector('#app-status');
+  appStatus.innerHTML = '';
+  appStatus.classList = '';
+}
 
-//   response = await fetch(
-//     `https://countriesnow.space/api/v0.1/countries/${param}`,
-//     fetchConfig
-//   );
+export function displayError(error) {
+  const appStatus = document.querySelector('#app-status');
+  appStatus.innerHTML = `${error}`;
+  appStatus.innerHTML += String.raw`
+    <div class='buttons-container'>
+      <button id="go-back">Go Back</button>
+      <button id="try-again">Refresh</button>
+    </div>`;
+  appStatus.classList = 'error';
 
-//   if (!response.ok) {
-//     throw new Error(response);
-//   }
-
-//   return response.json();
-// }
+  document.querySelector('#go-back').addEventListener('click', () => {
+    history.back();
+  });
+  document.querySelector('#try-again').addEventListener('click', () => {
+    location.reload();
+  });
+}

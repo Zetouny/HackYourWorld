@@ -1,10 +1,16 @@
 import { createCountriesPage } from '../components/countriesPage.js';
 import { createWorldMapGlobe } from './globe.js';
 import { initCountryPage } from './countryPage.js';
-import { setUrl, getCountry } from './commonFunctions.js';
+import {
+  setUrl,
+  getCountry,
+  loadingStart,
+  loadingEnd,
+} from './commonFunctions.js';
 
 let GLOBE_CONTROLLER;
 export const initCountriesPage = async () => {
+  loadingStart();
   const root = document.querySelector('main');
   root.innerHTML = '';
 
@@ -13,27 +19,25 @@ export const initCountriesPage = async () => {
 
   GLOBE_CONTROLLER = createWorldMapGlobe();
 
-  let countriesData;
-  try {
-    countriesData = await getCountry('name,flags,latlng,cca2');
-    countriesData.sort((a, b) => a.name.common.localeCompare(b.name.common));
-    createCountriesList(countriesData);
-  } catch (error) {
-    console.log(error.message);
-  }
+  const countriesData = await getCountry('name,flags,latlng,cca2');
+  countriesData.sort((a, b) => a.name.common.localeCompare(b.name.common));
+  createCountriesList(countriesData);
 
-  const searchBox = document.querySelector('#search-box');
   let searchTimeOut;
+  const searchBox = document.querySelector('#search-box');
   searchBox.addEventListener('input', () => {
     const searchValue = searchBox.value;
+
     clearTimeout(searchTimeOut);
+
     searchTimeOut = setTimeout(() => {
       createCountriesList(countriesData, searchValue);
     }, 500);
   });
+  loadingEnd();
 };
 
-async function createCountriesList(countriesData, searchKeyword = '') {
+function createCountriesList(countriesData, searchKeyword = '') {
   const ul = document.querySelector('#countries-list');
   ul.innerHTML = '';
 

@@ -19,80 +19,73 @@ export const initHomePage = () => {
 };
 
 async function getStarted() {
-  try {
-    const ipToLocation = await getUserLocation();
-    const getUserCountry = await getCountry(
-      'name,latlng',
-      ipToLocation.country
-    );
+  const ipToLocation = await getUserLocation();
+  const getUserCountry = await getCountry('name,latlng', ipToLocation.country);
 
-    randomLocations();
+  randomLocations();
 
-    const buttonsContainer = document.querySelector('.buttons-container');
-    buttonsContainer.querySelector('#get-started').classList.add('animate-out');
+  const buttonsContainer = document.querySelector('.buttons-container');
+  buttonsContainer.querySelector('#get-started').classList.add('animate-out');
 
-    const hacking = document.createElement('p');
+  const hacking = document.createElement('p');
 
-    await animateText(
-      hacking,
-      '<h2 class="colored">Hacking into your location...</h2>',
-      'in-out',
-      1500
-    );
-    buttonsContainer.before(hacking);
-    await animateText(
-      hacking,
-      '<h2 class="colored">Deploying satellites...</h2>',
-      'in-out',
-      3000
-    );
+  await animateText(
+    hacking,
+    '<h2 class="colored">Hacking into your location...</h2>',
+    'in-out',
+    1500
+  );
+  buttonsContainer.before(hacking);
+  await animateText(
+    hacking,
+    '<h2 class="colored">Deploying satellites...</h2>',
+    'in-out',
+    3000
+  );
 
-    await animateText(
-      hacking,
-      '<h2 class="colored">Cracking firewalls...</h2>',
-      'in-out',
-      3000
-    );
+  await animateText(
+    hacking,
+    '<h2 class="colored">Cracking firewalls...</h2>',
+    'in-out',
+    3000
+  );
 
-    await animateText(
-      hacking,
-      '<h2 class="colored">Just kidding!</h2>',
-      'in-out',
-      3000
-    );
+  await animateText(
+    hacking,
+    '<h2 class="colored">Just kidding!</h2>',
+    'in-out',
+    3000
+  );
 
-    await animateText(
-      hacking,
-      `<h2 class="colored">Gotcha! You’re in ${getUserCountry.name.common}!</h2>
+  await animateText(
+    hacking,
+    `<h2 class="colored">Gotcha! You’re in ${getUserCountry.name.common}!</h2>
     But don’t worry, we’re friendly hackers. Click below to uncover everything about your country, or explore the secrets of the world!`,
-      'in',
-      3000
-    );
+    'in',
+    3000
+  );
 
-    buttonsContainer.innerHTML = '';
-    await animateText(
-      buttonsContainer,
-      '<button id="hack-my-location">Hack My Location!</button><button id="hack-the-world">Hack The World!</button>',
-      'in',
-      0
-    );
+  buttonsContainer.innerHTML = '';
+  await animateText(
+    buttonsContainer,
+    '<button id="hack-my-location">Hack My Location!</button><button id="hack-the-world">Hack The World!</button>',
+    'in',
+    0
+  );
 
-    randomLocations(getUserCountry.latlng);
+  randomLocations(getUserCountry.latlng);
 
-    const hackMyLocation = document.querySelector('#hack-my-location');
-    hackMyLocation.addEventListener('click', async () => {
-      setUrl(ipToLocation.country);
-      initCountryPage();
-    });
+  const hackMyLocation = document.querySelector('#hack-my-location');
+  hackMyLocation.addEventListener('click', () => {
+    setUrl(ipToLocation.country);
+    initCountryPage();
+  });
 
-    const hackTheWorld = document.querySelector('#hack-the-world');
-    hackTheWorld.addEventListener('click', () => {
-      setUrl();
-      initCountriesPage();
-    });
-  } catch (error) {
-    console.log('Error:', error.message);
-  }
+  const hackTheWorld = document.querySelector('#hack-the-world');
+  hackTheWorld.addEventListener('click', () => {
+    setUrl();
+    initCountriesPage();
+  });
 }
 
 function animateText(element, text, animationType, duration) {

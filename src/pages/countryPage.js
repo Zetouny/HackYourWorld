@@ -1,7 +1,8 @@
 import { createCountryPage } from '../components/countryPage.js';
-import { getCountry } from './commonFunctions.js';
+import { getCountry, loadingStart, loadingEnd } from './commonFunctions.js';
 
 export const initCountryPage = async () => {
+  loadingStart();
   const root = document.querySelector('main');
   root.innerHTML = '';
 
@@ -12,12 +13,7 @@ export const initCountryPage = async () => {
     'country'
   );
 
-  let countryData;
-  try {
-    countryData = await getCountry('', getURLCountry);
-  } catch (error) {
-    console.log(error);
-  }
+  const countryData = await getCountry('', getURLCountry);
 
   const countryName = countryData[0].name.common;
   let countryFlag = countryData[0].flags.svg;
@@ -140,6 +136,7 @@ export const initCountryPage = async () => {
     `;
   countryInfo.appendChild(financialInfo);
 
+  loadingEnd();
   // General Information:
   // Languages
   // Dial Code
@@ -164,7 +161,7 @@ async function getAllLanguages() {
       `https://restcountries.com/v3.1/all?fields=languages`
     );
     if (!response.ok) {
-      throw new Error(response);
+      throw new Error(response.status);
     }
 
     const responseJson = await response.json();
@@ -176,7 +173,7 @@ async function getAllLanguages() {
 
     return languages;
   } catch (error) {
-    console.log(error);
+    displayError(`<strong>An error occurred:</strong>${error}`);
   }
 }
 
@@ -195,13 +192,13 @@ async function cca3ToName(cca3) {
       `https://restcountries.com/v3.1/alpha/${cca3}?fields=name`
     );
     if (!response.ok) {
-      throw new Error(response);
+      throw new Error(response.status);
     }
 
     const responseJson = await response.json();
     return responseJson.name.common;
   } catch (error) {
-    console.log(error);
+    displayError(`<strong>An error occurred:</strong>${error}`);
   }
 }
 
@@ -211,11 +208,11 @@ async function getRecentPopulationInfo(country, param) {
       `https://api.worldbank.org/v2/country/${country}/indicator/${param}?format=json&mrnev=1`
     );
     if (!response.ok) {
-      throw new Error(response);
+      throw new Error(response.status);
     }
 
     return await response.json();
   } catch (error) {
-    console.log(error);
+    displayError(`<strong>An error occurred:</strong>${error}`);
   }
 }
