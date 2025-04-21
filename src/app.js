@@ -16,7 +16,22 @@ function main() {
   } else {
     initHomePage();
   }
+
+  const menuToggle = document.querySelector('#toggle-menu');
+  menuToggle.addEventListener('click', toggleMenu);
+}
+
+function toggleMenu() {
+  const menu = document.querySelector('#nav-links');
+  console.log('clicked');
+
+  if (menu.classList == '') {
+    menu.classList.add('visible');
+  } else {
+    menu.classList.remove('visible');
+  }
 }
 
 window.addEventListener('load', main);
 window.addEventListener('popstate', main); // Listen to browser's back & forward history buttons
+const L_NO_TOUCH = true;

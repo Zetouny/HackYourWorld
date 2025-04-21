@@ -38,7 +38,10 @@ export const initCountryPage = async () => {
   mapContainer.id = 'country-map';
   root.prepend(mapContainer);
 
-  const countryMap = L.map('country-map').setView(countryData[0].latlng, 5);
+  const countryMap = L.map('country-map', {
+    dragging: true,
+    tapHold: true,
+  }).setView(countryData[0].latlng, 5);
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
     attribution:
       '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',

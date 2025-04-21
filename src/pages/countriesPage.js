@@ -76,6 +76,11 @@ function createCountriesList(countriesData, searchKeyword = '') {
 
   const selectCountries = document.querySelectorAll('#countries-list li');
   selectCountries.forEach((country) => {
+    country.addEventListener('touchstart', () => {
+      GLOBE_CONTROLLER.updateFocus(country.dataset.lat, country.dataset.long);
+      GLOBE_CONTROLLER.updateMarker(country.dataset.lat, country.dataset.long);
+    });
+
     country.addEventListener('mouseover', () => {
       GLOBE_CONTROLLER.updateFocus(country.dataset.lat, country.dataset.long);
       GLOBE_CONTROLLER.updateMarker(country.dataset.lat, country.dataset.long);
