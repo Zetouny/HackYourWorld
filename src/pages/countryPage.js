@@ -186,7 +186,9 @@ async function getAllLanguages() {
 
     return languages;
   } catch (error) {
-    displayError(`<strong>An error occurred:</strong>${error}`);
+    displayError(
+      `<strong>An error occurred while getting world languages:</strong>${error}`
+    );
   }
 }
 
@@ -211,7 +213,9 @@ async function cca3ToName(cca3) {
     const responseJson = await response.json();
     return responseJson.name.common;
   } catch (error) {
-    displayError(`<strong>An error occurred:</strong>${error}`);
+    displayError(
+      `<strong>An error occurred while getting the country's name:</strong>${error}`
+    );
   }
 }
 
@@ -226,7 +230,9 @@ async function getRecentPopulationInfo(country, param) {
 
     return await response.json();
   } catch (error) {
-    displayError(`<strong>An error occurred:</strong>${error}`);
+    displayError(
+      `<strong>An error occurred while getting the country's population:</strong>${error}`
+    );
   }
 }
 
@@ -252,6 +258,8 @@ async function fetchCountryGeoJSON(country, cca2, countryMap) {
 
     countryMap.fitBounds(geoJsonLayer.getBounds());
   } catch (error) {
-    displayError(`<strong>An error occurred:</strong>${error}`);
+    displayError(
+      `<strong>An error occurred while fetching the map:</strong>${error}`
+    );
   }
 }

@@ -42,20 +42,60 @@ body:has(.error) {
   top: 0;
   left: 0;
   position: absolute;
-  background-color: #111;
+  background-color: #0d0d0d;
   font-size: 4rem;
   text-align: center;
   user-select: none;
   visibility: hidden;
   opacity: 0;
   z-index: 9999;
-  transition: all 0.3s ease-in-out;
 }
 
 #app-status.loading,
 #app-status.error {
   visibility: visible;
   opacity: 1;
+}
+
+nav {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 2dvw;
+  width: 100%;
+  padding: 1dvh 2dvw;
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: 2rem;
+  background-color: #0d0d0d;
+  border-bottom: 2px solid #121212;
+  position: absolute;
+  z-index: 9999;
+}
+
+#website-name {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+#website-name a {
+  color: #1e90ff;
+}
+
+#website-name span {
+  font-size: 5rem;
+  margin-right: 0.3dvw;
+}
+
+#nav-links {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-content: center;
+  gap: 1dvw;
 }
 
 h1.page-title {

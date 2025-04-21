@@ -5,7 +5,7 @@ export const createHomePage = () => {
 
   main.innerHTML = String.raw`
     <div class="content-container">
-      <h1 class="page-title">HackYourWorld</h1>
+      <h1 class="page-title">Welcome to HackYourWorld</h1>
       
       <p>Your one-stop destination for exploring countries around the globe! Instantly access key details about any country, all powered by up-to-date data. Start discovering the world today!</p>
       

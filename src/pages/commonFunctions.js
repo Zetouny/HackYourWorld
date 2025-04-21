@@ -14,7 +14,9 @@ export async function getUserLocation() {
 
     return response.json();
   } catch (error) {
-    displayError(`<strong>An error occurred:</strong>${error}`);
+    displayError(
+      `<strong>An error occurred while allocating the user's country:</strong>${error}`
+    );
   }
 }
 
@@ -35,7 +37,9 @@ export async function getCountry(request, country) {
 
     return response.json();
   } catch (error) {
-    displayError(`<strong>An error occurred:</strong>${error}`);
+    displayError(
+      `<strong>An error occurred while fetching all countries:</strong>${error}`
+    );
   }
 }
 

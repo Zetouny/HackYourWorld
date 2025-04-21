@@ -8,7 +8,7 @@ function main() {
   );
 
   if (getURLCountry) {
-    if (getURLCountry == 'All') {
+    if (getURLCountry.toLowerCase() == 'all') {
       initCountriesPage();
     } else {
       initCountryPage(getURLCountry);
