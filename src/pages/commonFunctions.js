@@ -43,13 +43,13 @@ export async function getCountry(request, country) {
   }
 }
 
-export function loadingStart() {
+export function startLoading() {
   const appStatus = document.querySelector('#app-status');
   appStatus.innerHTML = '<div>Loading...</div><div class="loader"></div>';
   appStatus.classList = 'loading';
 }
 
-export function loadingEnd() {
+export function endLoading() {
   const appStatus = document.querySelector('#app-status');
   appStatus.innerHTML = '';
   appStatus.classList = '';

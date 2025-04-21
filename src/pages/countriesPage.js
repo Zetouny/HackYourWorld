@@ -4,13 +4,13 @@ import { initCountryPage } from './countryPage.js';
 import {
   setUrl,
   getCountry,
-  loadingStart,
-  loadingEnd,
+  startLoading,
+  endLoading,
 } from './commonFunctions.js';
 
 let GLOBE_CONTROLLER;
 export const initCountriesPage = async () => {
-  loadingStart();
+  startLoading();
   const root = document.querySelector('main');
   root.innerHTML = '';
 
@@ -34,7 +34,7 @@ export const initCountriesPage = async () => {
       createCountriesList(countriesData, searchValue);
     }, 500);
   });
-  loadingEnd();
+  endLoading();
 };
 
 function createCountriesList(countriesData, searchKeyword = '') {
