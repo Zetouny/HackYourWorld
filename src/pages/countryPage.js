@@ -85,16 +85,19 @@ async function fetchCountryGeoJSON(country, cca2, countryMap) {
     }
 
     const data = await response.json();
-    const geoJsonLayer = L.geoJson(data, {
-      style: {
-        fillColor: 'transparent',
-        color: '#1e90ff',
-        weight: 2,
-        fillOpacity: 1,
-      },
-    }).addTo(countryMap);
 
-    countryMap.fitBounds(geoJsonLayer.getBounds());
+    if (data.features != '') {
+      const geoJsonLayer = L.geoJson(data, {
+        style: {
+          fillColor: 'transparent',
+          color: '#1e90ff',
+          weight: 2,
+          fillOpacity: 1,
+        },
+      }).addTo(countryMap);
+
+      countryMap.fitBounds(geoJsonLayer.getBounds());
+    }
   } catch (error) {
     displayError(
       `<strong>An error occurred while fetching the map:</strong>${error}`

@@ -35,7 +35,7 @@ export async function countryGeography(countryData) {
   const continents = countryData?.continents.join(', ') ?? '-';
   const surfaceArea = countryData?.area.toLocaleString() ?? '-';
   const timeZone = countryData?.timezones ?? '-';
-  const Coordinates = countryData?.latlng.join(', ') ?? '-';
+  const coordinates = countryData?.latlng.join(', ') ?? '-';
   const borders = countryData.borders
     ? await getCountryBorders(countryData.borders)
     : 'None';
@@ -47,7 +47,7 @@ export async function countryGeography(countryData) {
     <h4>Continents</h4> <span>${continents}</span>
     <h4>Surface Area</h4> <span>${surfaceArea} km²</span>
     <h4>Time Zone</h4> <span>${timeZone}</span>
-    <h4>Coordinates</h4> <span>[${Coordinates}]</span>
+    <h4>Coordinates</h4> <span><a href="https://www.google.com/maps/place/${countryData?.name?.common}" target="_new">[${coordinates}]</a></span>
     <h4>Borders</h4> <span>${borders}</span>
   </div>
   `;
@@ -56,50 +56,77 @@ export async function countryGeography(countryData) {
 export async function countryPopulation(countryData) {
   const countryCCA3 = countryData.cca3;
 
-  const totalPopulation = await getRecentPopulationInfo(
+  const getTotalPopulation = await getRecentPopulationInfo(
     countryCCA3,
     'SP.POP.TOTL'
   );
-  const malePercentage = await getRecentPopulationInfo(
+
+  const getMalePercentage = await getRecentPopulationInfo(
     countryCCA3,
     'SP.POP.TOTL.MA.ZS'
   );
-  const femalePercentage = await getRecentPopulationInfo(
+  const getFemalePercentage = await getRecentPopulationInfo(
     countryCCA3,
     'SP.POP.TOTL.FE.ZS'
   );
-  const age014Percentage = await getRecentPopulationInfo(
+  const getAge014Percentage = await getRecentPopulationInfo(
     countryCCA3,
     'SP.POP.0014.TO.ZS'
   );
-  const age1564Percentage = await getRecentPopulationInfo(
+  const getAge1564Percentage = await getRecentPopulationInfo(
     countryCCA3,
     'SP.POP.1564.TO.ZS'
   );
-  const age65Percentage = await getRecentPopulationInfo(
+  const getAge65Percentage = await getRecentPopulationInfo(
     countryCCA3,
     'SP.POP.65UP.TO.ZS'
   );
-  const populationDensity = await getRecentPopulationInfo(
+  const getPopulationDensity = await getRecentPopulationInfo(
     countryCCA3,
     'EN.POP.DNST'
   );
-  const lifeExpectancy = await getRecentPopulationInfo(
+  const getLifeExpectancy = await getRecentPopulationInfo(
     countryCCA3,
     'SP.DYN.LE00.IN'
   );
 
+  const totalPopulationDate = getTotalPopulation[1]?.[0]?.date ?? '-';
+
+  const totalPopulation =
+    getTotalPopulation[1]?.[0]?.value.toLocaleString() ?? 'Unknown';
+
+  const malePercentage =
+    getMalePercentage[1]?.[0]?.value.toLocaleString() ?? 'Unknown';
+
+  const femalePercentage =
+    getFemalePercentage[1]?.[0]?.value.toLocaleString() ?? 'Unknown';
+
+  const age014Percentage =
+    getAge014Percentage[1]?.[0]?.value.toLocaleString() ?? 'Unknown';
+
+  const age1564Percentage =
+    getAge1564Percentage[1]?.[0]?.value.toLocaleString() ?? 'Unknown';
+
+  const age65Percentage =
+    getAge65Percentage[1]?.[0]?.value.toLocaleString() ?? 'Unknown';
+
+  const populationDensity =
+    getPopulationDensity[1]?.[0]?.value.toLocaleString() ?? 'Unknown';
+
+  const lifeExpectancy =
+    getLifeExpectancy[1]?.[0]?.value.toLocaleString() ?? 'Unknown';
+
   return String.raw`
     <legend>👨‍👩‍👧‍👦 Population</legend>
     <div class="info-grid">
-      <h4>Total Population <em>(${totalPopulation[1][0].date})</em></h4> <span>${totalPopulation[1][0].value.toLocaleString()}</span>
-      <h4>Male <em>(% of total population)</em></h4> <span>${malePercentage[1][0].value.toLocaleString()}%</span>
-      <h4>Female <em>(% of total population)</em></h4> <span>${femalePercentage[1][0].value.toLocaleString()}%</span>
-      <h4>Population ages 0-14 <em>(% of total population)</em></h4> <span>${age014Percentage[1][0].value.toLocaleString()}%</span>
-      <h4>Population ages 15-64 <em>(% of total population)</em></h4> <span>${age1564Percentage[1][0].value.toLocaleString()}%</span>
-      <h4>Population ages 65 and above <em>(% of total population)</em></h4> <span>${age65Percentage[1][0].value.toLocaleString()}%</span>
-      <h4>Population density <em>(people per sq. km of land area)</em></h4> <span>${populationDensity[1][0].value.toLocaleString()}</span>
-      <h4>Life expectancy at birth</h4> <span>${lifeExpectancy[1][0].value.toLocaleString()} Years</span>
+      <h4>Total Population <em>(${totalPopulationDate})</em></h4> <span>${totalPopulation}</span>
+      <h4>Male <em>(% of total population)</em></h4> <span>${malePercentage}%</span>
+      <h4>Female <em>(% of total population)</em></h4> <span>${femalePercentage}%</span>
+      <h4>Population ages 0-14 <em>(% of total population)</em></h4> <span>${age014Percentage}%</span>
+      <h4>Population ages 15-64 <em>(% of total population)</em></h4> <span>${age1564Percentage}%</span>
+      <h4>Population ages 65 and above <em>(% of total population)</em></h4> <span>${age65Percentage}%</span>
+      <h4>Population density <em>(people per sq. km of land area)</em></h4> <span>${populationDensity}</span>
+      <h4>Life expectancy at birth</h4> <span>${lifeExpectancy} Years</span>
     </div>
     `;
 }
@@ -109,22 +136,29 @@ export async function countryFinancial(countryData) {
   const currency =
     countryData?.currencies[Object.keys(countryData.currencies) ?? '-'];
 
-  const exchangeRate = await getRecentPopulationInfo(
+  const getExchangeRate = await getRecentPopulationInfo(
     countryCCA3,
     'PA.NUS.FCRF'
   );
 
-  const totalReserves = await getRecentPopulationInfo(
+  const exchangeRateDate = getExchangeRate[1]?.[0]?.date ?? '-';
+  const exchangeRate = getExchangeRate[1]?.[0]?.value ?? 'Unknown';
+
+  const getTotalReserves = await getRecentPopulationInfo(
     countryCCA3,
     'FI.RES.TOTL.CD'
   );
+
+  const totalReservesDate = getTotalReserves[1]?.[0]?.date ?? '-';
+  const totalReserves =
+    getTotalReserves[1]?.[0]?.value.toLocaleString() ?? 'Unknown';
 
   return String.raw`
     <legend>💵 Financial</legend>
     <div class="info-grid">
       <h4>Currency Name & Symbol</h4> <span>${currency.name} (${currency.symbol})</span>
-      <h4>Official exchange rate <em>(${exchangeRate[1][0].date})</em><br><em>(LCU per US$, period average)</em></h4> <span>${exchangeRate[1][0].value}</span>
-      <h4>Total reserves <em>(${totalReserves[1][0].date}) (includes gold, current US$)</em></h4> <span>${totalReserves[1][0].value.toLocaleString()}</span>
+      <h4>Official exchange rate <em>(${exchangeRateDate})</em><br><em>(LCU per US$, period average)</em></h4> <span>${exchangeRate}</span>
+      <h4>Total reserves <em>(${totalReservesDate}) (includes gold, current US$)</em></h4> <span>${totalReserves}</span>
     </div>
     `;
 }
@@ -167,12 +201,13 @@ async function getAllLanguages() {
 }
 
 async function getCountryBorders(country) {
-  let output = [];
+  let countryBorders = [];
   for (const cca3 of country) {
-    output.push(await cca3ToName(cca3));
+    const html = `<a href='?country=${cca3}'>${await cca3ToName(cca3)}</a>`;
+    countryBorders.push(html);
   }
 
-  return output.join(', ');
+  return countryBorders.join(', ');
 }
 
 async function cca3ToName(cca3) {
