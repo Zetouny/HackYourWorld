@@ -461,7 +461,7 @@ details[open] summary {
   #globe-container {
     width: 150%;
     position: absolute;
-    opacity: 0.2;
+    opacity: 0.5;
     z-index: 0;
   }
 
